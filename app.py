@@ -9,7 +9,7 @@ app.secret_key = "supersecretkey"
 
 USERS_DB = "users.db"
 MOVIES_DB = "movies.db"
-OMDB_API_KEY = "9b7f8d79"
+OMDB_API_KEY = os.environ.get("OMDB_API_KEY")
 
 def get_users_db():
     conn = sqlite3.connect(USERS_DB)
