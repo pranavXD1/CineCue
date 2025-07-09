@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CineCue - Movie Rating App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Theme Styles -->
+    <style>
+        body.light-mode {
+            background-color: #f8f9fa;
+            color: #000;
+        }
+        body.dark-mode {
+            background-color: #121212;
+            color: #fff;
+        }
+        .navbar-light-mode {
+            background-color: #ffffff !important;
+        }
+        .navbar-dark-mode {
+            background-color: #212529 !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg px-4" id="mainNavbar">
+        <a class="navbar-brand" href="/">🎬 CineCue</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                {% if session.username %}
+                <li class="nav-item me-3">
+                    <span class="navbar-text">
+                        Logged in as <strong>{{ session.username }}</strong>
+                    </span>
+                </li>
+                <li class="nav-item me-2">
+                    <a class="btn btn-sm btn-outline-dark nav-btn" href="/" {% if request.path == '/' %}style="font-weight:bold"{% endif %}>Home</a>
+                </li>
+                <li class="nav-item me-2">
+                    <a class="btn btn-sm btn-outline-dark nav-btn" href="/watchlist" {% if request.path == '/watchlist' %}style="font-weight:bold"{% endif %}>Watchlist</a>
+                </li>
+                <li class="nav-item me-3">
+                    <button id="themeToggle" class="btn btn-sm btn-warning">🌙</button>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-sm btn-outline-dark nav-btn" href="/logout">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item me-2">
+                    <a class="btn btn-sm btn-outline-dark nav-btn" href="/login" {% if request.path == '/login' %}style="font-weight:bold"{% endif %}>Login</a>
+                </li>
+                <li class="nav-item me-3">
+                    <a class="btn btn-sm btn-outline-dark nav-btn" href="/register" {% if request.path == '/register' %}style="font-weight:bold"{% endif %}>Register</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Flash messages and page content -->
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{ messages[0] }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const toggleBtn = document.getElementById('themeToggle');
+        const body = document.body;
+        const navbar = document.getElementById('mainNavbar');
+
+        function applyTheme(mode) {
+            // Clear old theme classes
+            body.classList.remove('light-mode', 'dark-mode');
+            navbar.classList.remove('navbar-light', 'navbar-dark', 'bg-light', 'bg-dark');
+
+            if (mode === 'dark') {
+                body.classList.add('dark-mode');
+                navbar.classList.add('navbar-dark', 'bg-dark');
+                toggleBtn.innerText = '🌞';  // Sun icon for switching to light mode
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('btn-outline-dark');
+                    btn.classList.add('btn-outline-light');
+                });
+            } else {
+                body.classList.add('light-mode');
+                navbar.classList.add('navbar-light', 'bg-light');
+                toggleBtn.innerText = '🌙';  // Moon icon for switching to dark mode
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('btn-outline-light');
+                    btn.classList.add('btn-outline-dark');
+                });
+            }
+        }
+
+        // Load saved theme
+        const savedMode = localStorage.getItem('theme') || 'light';
+        applyTheme(savedMode);
+
+        // Toggle button click
+        toggleBtn.addEventListener('click', () => {
+            const newMode = body.classList.contains('dark-mode') ? 'light' : 'dark';
+            localStorage.setItem('theme', newMode);
+            applyTheme(newMode);
+        });
+    </script>
+
+
+</body>
+</html>

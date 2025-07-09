@@ -1,0 +1,42 @@
+<div class="col-md-4 mb-4">
+    <div class="card h-100 shadow-sm">
+
+        <!-- Poster -->
+        {% if movie["poster"] and movie["poster"] != "N/A" %}
+        <img src="{{ movie['poster'] }}" class="card-img-top" alt="{{ movie['title'] }}">
+        {% else %}
+        <img src="https://via.placeholder.com/350x500?text=No+Poster" class="card-img-top" alt="No Poster">
+        {% endif %}
+
+        <div class="card-body">
+            <!-- Title -->
+            <h5 class="card-title">{{ movie['title'] }} ({{ movie['year'] }})</h5>
+
+            <!-- IMDb Rating -->
+            <p class="card-text"><strong>IMDb:</strong> {{ movie['imdb_rating'] }}</p>
+
+            <!-- User Rating -->
+            {% if movie['user_rating'] %}
+            <p class="card-text"><strong>Your Rating:</strong> {{ movie['user_rating'] }}</p>
+            {% endif %}
+
+            <!-- Note Edit Form -->
+            <form action="/note/{{ movie['id'] }}" method="POST" class="d-flex align-items-center mb-2">
+                <input name="new_note" type="text" class="form-control form-control-sm me-2" placeholder="Update note" value="{{ movie['note'] or '' }}">
+                <button class="btn btn-sm btn-outline-secondary">Save</button>
+            </form>
+
+            <!-- Plot -->
+            <p class="card-text">{{ movie['description'] }}</p>
+        </div>
+
+        <!-- Footer: Rating + Delete -->
+        <div class="card-footer">
+            <form action="/rate/{{ movie['id'] }}" method="POST" class="d-flex align-items-center">
+                <input name="new_rating" type="number" step="0.1" min="0" max="10" class="form-control form-control-sm me-2" placeholder="Update rating">
+                <button class="btn btn-sm btn-outline-primary">Update</button>
+                <a href="/delete/{{ movie['id'] }}" class="btn btn-sm btn-outline-danger ms-auto">Delete</a>
+            </form>
+        </div>
+    </div>
+</div>

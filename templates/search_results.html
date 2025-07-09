@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2 class="mb-4">🔍 Search Results</h2>
+<div class="row">
+    {% for result in results %}
+    <div class="col-md-3 mb-4">
+        <div class="card h-100">
+            <img src="{{ result.Poster if result.Poster != 'N/A' else 'https://via.placeholder.com/300x400?text=No+Image' }}" class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title">{{ result.Title }}</h5>
+                <p class="card-text">({{ result.Year }}) - {{ result.Type.title() }}</p>
+            </div>
+            <div class="card-footer">
+                <a href="/add/{{ result.imdbID }}" class="btn btn-sm btn-primary w-100">➕ Add to Watchlist</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

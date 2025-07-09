@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2 class="mb-4">🎯 Your Rated Movies</h2>
+<form action="/search" method="POST" class="mb-4">
+    <div class="row g-2">
+        <div class="col-md-10">
+            <input type="text" name="title" class="form-control" placeholder="Search movie title" required>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary w-100" type="submit">Search</button>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    {% for movie in rated_movies %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <img src="{{ movie.poster or 'https://via.placeholder.com/350x500?text=No+Poster' }}" class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title">{{ movie.title }} ({{ movie.year }})</h5>
+                <p><strong>IMDb:</strong> {{ movie.imdb_rating }}</p>
+                <p><strong>Your Rating:</strong> {{ movie.user_rating }}</p>
+                <p>{{ movie.description }}</p>
+                <form action="/note/{{ movie.id }}" method="POST">
+                    <input name="new_note" type="text" class="form-control form-control-sm mb-2" value="{{ movie.note }}">
+                    <button class="btn btn-sm btn-outline-secondary">Save Note</button>
+                </form>
+            </div>
+            <div class="card-footer">
+                <form action="/rate/{{ movie.id }}" method="POST" class="d-flex align-items-center">
+                    <input name="new_rating" type="number" step="0.1" min="0" max="10" class="form-control form-control-sm me-2" placeholder="Update rating">
+                    <button class="btn btn-sm btn-outline-primary">Update</button>
+                    <a href="/delete/{{ movie.id }}" class="btn btn-sm btn-outline-danger ms-auto">Delete</a>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <p>No rated movies yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}
