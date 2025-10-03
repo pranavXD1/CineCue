@@ -1,8 +1,7 @@
 # CineCue 🎬
 **CS50x Final Project Submission**
 
-🎥 **Video Demo:** [https://your-demo-link-here](https://your-demo-link-here)
-
+🎥 **Video Demo:**
 ---
 
 ## 📜 Description
